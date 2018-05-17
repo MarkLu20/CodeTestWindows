@@ -1,0 +1,17 @@
+{
+	"FileVersion": 3,
+	"EngineAssociation": "{462222C3-47EC-0EE9-C06F-58BDF2064B67}",
+	"Category": "",
+	"Description": "",
+	"Modules": [
+		{
+			"Name": "CodeTestForWindows",
+			"Type": "Runtime",
+			"LoadingPhase": "Default",
+			"AdditionalDependencies": [
+				"CoreUObject",
+				"Engine"
+			]
+		}
+	]
+}
