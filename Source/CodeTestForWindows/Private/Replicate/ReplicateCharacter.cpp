@@ -88,6 +88,7 @@ void AReplicateCharacter::NetMulticastFunction_Implementation()
 bool AReplicateCharacter::SeverCollectPickups_Validate(float value)
 {
 	return true;
+	
 }
 void AReplicateCharacter::SeverCollectPickups_Implementation(float value)
 {
