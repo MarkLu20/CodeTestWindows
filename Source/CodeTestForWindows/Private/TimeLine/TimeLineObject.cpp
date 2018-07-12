@@ -27,6 +27,8 @@ UTimeLineObject::UTimeLineObject(const FObjectInitializer &ObjectInitializer) : 
 	TimeLineMap.Add(ETimeLineType::Roll,RollTimeLine);
 	CurveMap.Add(ETimeLineType::Roll,RollTimeLineCurve);
 	KeyHandleMap.Add(ETimeLineType::Roll,RollLastHandle);
+	TimeLineInstance->GetClass();
+	  GetDefault<UTimeLineObject>();
 
 }
 

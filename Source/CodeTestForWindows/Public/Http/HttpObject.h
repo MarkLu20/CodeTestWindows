@@ -47,5 +47,9 @@ public:
 			static	UHttpObject* GetHttpObject();
 		UFUNCTION(BlueprintImplementableEvent,BlueprintCallable)
 			void GetURLData(TArray<FJsonList> &jsonlist);
+		UFUNCTION(BlueprintCallable)
+			void ShutDownHttpThread();
+private:
 		static UHttpObject *httpObject;
+		UHttpObject *HttpObject = nullptr;
 };

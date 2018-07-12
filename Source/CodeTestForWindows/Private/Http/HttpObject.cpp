@@ -2,21 +2,33 @@
 
 #include "HttpObject.h"
 #include "Json.h"
+#include "HttpManager.h"
 #define LOCTEXT_NAMESPACE "UHTTPOBJECT" 
 UHttpObject* UHttpObject::httpObject = nullptr;
 void UHttpObject::SetUrl(FString ServerAddr)
 {
-	TSharedRef<IHttpRequest> HttpRequest = FHttpModule::Get().CreateRequest();
+	HttpObject = NewObject<UHttpObject>();
+	HttpObject->AddToRoot();
+
+
+	 TSharedRef<IHttpRequest> HttpRequest = FHttpModule::Get().CreateRequest();
+	//添加到HTTPMangerThread线程中
+	 FHttpModule::Get().GetHttpManager().AddRequest(HttpRequest);
+	
 	HttpRequest->SetURL(ServerAddr);
 	HttpRequest->SetVerb(TEXT("GET"));
 	HttpRequest->SetHeader(TEXT("Content-Type"), TEXT("application/json;charset=utf-8"));
 	HttpRequest->OnProcessRequestComplete().BindUObject(this,&UHttpObject::RepquestCompelete);
 	HttpRequest->ProcessRequest();
+	//FHttpModule::Get().GetHttpManager().Initialize();
+	
 }
 
 void UHttpObject::RepquestCompelete(FHttpRequestPtr HttpRequest, FHttpResponsePtr HttpResponse, bool bSucceeded)
-{ 
+{
+	httpObject->RemoveFromRoot();
 	FText SS = LOCTEXT("中俄无奈", "中文");
+	FString Content = HttpResponse->GetContentAsString();
 	if (bSucceeded)
 	{
 		 int32 code=HttpResponse->GetResponseCode();
@@ -61,5 +73,9 @@ UHttpObject * UHttpObject::GetHttpObject()
 		httpObject->AddToRoot();
 	}
 	return httpObject;
+}
+void UHttpObject::ShutDownHttpThread()
+{  //关闭http模块
+	FHttpModule::Get().GetHttpManager().Flush(true);
 }
 #undef LOCTEXT_NAMESPACE 
