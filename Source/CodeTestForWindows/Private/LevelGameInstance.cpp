@@ -11,7 +11,7 @@
 #include "MXLoadingScreen/Public/MXLoadingScreen.h"
 #include "Engine.h"
 #include "TestObject.h"
-
+#include "OpenFireChatAPI.h"
 #include "Runtime/CoreUObject/Public/CoreUObjectSharedPCH.h"
 
 //#include "Serialization/AsyncLoadingPrivate.h"
@@ -39,8 +39,14 @@ void ULevelGameInstance::Init()
 	FCoreUObjectDelegates::PostLoadMapWithWorld.AddUObject(this, &ULevelGameInstance::EndMap);
 	UPackage::PackageDirtyStateChangedEvent.AddUObject(this,&ULevelGameInstance::DirtyPackage);
 	UTestObject *TestObject = NewObject<UTestObject>();
+	OpenFire = GetDefault<UOpenFireChatAPI>();
 	
 	
+}
+
+void ULevelGameInstance::Shutdown()
+{
+	//OpenFire->RemoveConnection();
 }
 
 void ULevelGameInstance::LoadingCallBack(const FName & _packageName, const TArray<FName>& _allLevelNames, const TArray<FName>& _loadedLevelNames, float _percent)
@@ -204,6 +210,26 @@ void ULevelGameInstance::MixScreen()
 		TSharedPtr<SWindow> WindowPtr = gameEngine->GameViewportWindow.Pin();
 		WindowPtr->Minimize();
 	}
+}
+
+
+
+
+
+void ULevelGameInstance::Login(FString ServerAddr, int32 ServerPort, bool bUseSSL, bool bUsePlainTextAuth, float PingInterval, float PingTimeOut, int32 MaxPingRetries, bool bPrivateChatFriendsOnly, const FString &UserID, const FString &Auth)
+{
+	OpenFire->Login(ServerAddr, ServerPort, bUseSSL, bUsePlainTextAuth, PingInterval, PingTimeOut, MaxPingRetries, bPrivateChatFriendsOnly, UserID, Auth);
+}
+
+void ULevelGameInstance::SendPrivateMessage(const FString &FromUser, const FString &ToUser, const FString &Msg)
+{
+	OpenFire->SendPrivateMessage(FromUser, ToUser, Msg);
+	
+}
+
+void ULevelGameInstance::MucSendMessage(const FString& FromUser, const FString& Message, const FString &Type)
+{
+	OpenFire->MucSendMessage(FromUser, Message, Type);
 }
 
 bool ULevelGameInstance::HasLoaded(FName PackageName)

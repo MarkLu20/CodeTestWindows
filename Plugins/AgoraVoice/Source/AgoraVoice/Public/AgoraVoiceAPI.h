@@ -1,4 +1,4 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+ï»¿// Fill out your copyright notice in the Description page of Project Settings.
 
 #pragma once
 
@@ -11,8 +11,8 @@ using namespace agora;
 using namespace rtc;
 //using namespace signaling;
 /**
- * 
- */
+ *
+ */class UAgoraVoiceCallBack;
 UCLASS()
 class AGORAVOICE_API UAgoraVoiceAPI : public UObject
 {
@@ -20,63 +20,69 @@ class AGORAVOICE_API UAgoraVoiceAPI : public UObject
 public:
 	UAgoraVoiceAPI(const FObjectInitializer &ObjectInitializer);
 	UFUNCTION(BlueprintCallable, Category = "AgoraVoice")
-		int Login(const FString appID);
+		 int Login (const FString appID);
 
-	/*ÉèÖÃÆµµÀÊôĞÔ(setChannelProfile)
-		CHANNEL_PROFILE_COMMUNICATION	Í¨ĞÅÎªÄ¬ÈÏÄ£Ê½£¬ÓÃÓÚ³£¼ûµÄÒ»¶ÔÒ»»òÈºÁÄ£¬ÆµµÀÖĞµÄÈÎºÎÓÃ»§¿ÉÒÔ×ÔÓÉËµ»°
-		CHANNEL_PROFILE_LIVE_BROADCASTING Ö±²¥Ä£Ê½ÓĞÖ÷²¥ºÍ¹ÛÖÚÁ½ÖÖÓÃ»§½ÇÉ«£¬¿ÉÒÔÍ¨¹ıµ÷ÓÃ setClientRole ÉèÖÃ¡£Ö÷²¥¿ÉÊÕ·¢ÓïÒôºÍÊÓÆµ£¬µ«¹ÛÖÚÖ»ÄÜÊÕ£¬²»ÄÜ·¢
-		CHANNEL_PROFILE_GAME ÆµµÀÄÚÈÎºÎÓÃ»§¿É×ÔÓÉ·¢ÑÔ¡£¸ÃÄ£Ê½ÏÂÄ¬ÈÏÊ¹ÓÃµÍ¹¦ºÄµÍÂëÂÊµÄ±à½âÂëÆ÷*/
+	/*è®¾ç½®é¢‘é“å±æ€§(setChannelProfile)
+		CHANNEL_PROFILE_COMMUNICATION	é€šä¿¡ä¸ºé»˜è®¤æ¨¡å¼ï¼Œç”¨äºå¸¸è§çš„ä¸€å¯¹ä¸€æˆ–ç¾¤èŠï¼Œé¢‘é“ä¸­çš„ä»»ä½•ç”¨æˆ·å¯ä»¥è‡ªç”±è¯´è¯
+		CHANNEL_PROFILE_LIVE_BROADCASTING ç›´æ’­æ¨¡å¼æœ‰ä¸»æ’­å’Œè§‚ä¼—ä¸¤ç§ç”¨æˆ·è§’è‰²ï¼Œå¯ä»¥é€šè¿‡è°ƒç”¨ setClientRole è®¾ç½®ã€‚ä¸»æ’­å¯æ”¶å‘è¯­éŸ³å’Œè§†é¢‘ï¼Œä½†è§‚ä¼—åªèƒ½æ”¶ï¼Œä¸èƒ½å‘
+		CHANNEL_PROFILE_GAME é¢‘é“å†…ä»»ä½•ç”¨æˆ·å¯è‡ªç”±å‘è¨€ã€‚è¯¥æ¨¡å¼ä¸‹é»˜è®¤ä½¿ç”¨ä½åŠŸè€—ä½ç ç‡çš„ç¼–è§£ç å™¨*/
 	UFUNCTION(BlueprintCallable, Category = "AgoraVoice")
 		int SetChanelProfile(ECHANNEL_PROFILE_TYPE ChannelProfile=ECHANNEL_PROFILE_TYPE::CHANNEL_PROFILE_COMMUNICATION);
-	/*´ò¿ªÒôÆµ Ä¬ÈÏÊÇ´ò¿ªµÄ*/
+	/*æ‰“å¼€éŸ³é¢‘ é»˜è®¤æ˜¯æ‰“å¼€çš„*/
 	UFUNCTION(BlueprintCallable, Category = "AgoraVoice")
 		int EnableAudio();
-	/*¹Ø±ÕÒôÆµ*/
+	/*å…³é—­éŸ³é¢‘*/
 	UFUNCTION(BlueprintCallable, Category = "AgoraVoice")
 		int DisableAudio();
-	/*ÉèÖÃÒôÖÊ(setAudioProfile)*/
+	/*è®¾ç½®éŸ³è´¨(setAudioProfile)*/
 	UFUNCTION(BlueprintCallable, Category = "AgoraVoice")
 		int SetAudioProfile(EAUDIO_PROFILE_TYPE	AudioProfile=EAUDIO_PROFILE_TYPE::AUDIO_PROFILE_DEFAULT, EAUDIO_SCENARIO_TYPE AudioScenario=EAUDIO_SCENARIO_TYPE::AUDIO_SCENARIO_DEFAULT);
-	/*¼ÓÈë·¿¼ä*/
+	/*åŠ å…¥æˆ¿é—´*/
 
-		/*²ÎÊı	     ÃèÊö
-		token        Ä¬ÈÏÒÑ¾­ÉèÖÃÎªnull
-		channelId    ±êÊ¶Í¨»°µÄÆµµÀÃû³Æ£¬³¤¶ÈÔÚ64×Ö½ÚÒÔÄÚµÄ×Ö·û´®¡£ÒÔÏÂÎªÖ§³ÖµÄ×Ö·û¼¯·¶Î§£¨¹²89¸ö×Ö·û£© : a - z, A - Z, 0 - 9, space, !#$%&, () + , -, :; <= .#$%&, () + , -, :; <= ., > ? @[], ^_, { | }, ~
-		info         Ä¬ÈÏÉèÖÃÎª¿Õ
-		uid          Ä¬ÈÏÎª0 (·Ç±ØÑ¡Ïî) ÓÃ»§ID£¬32Î»ÎŞ·ûºÅÕûÊı¡£½¨ÒéÉèÖÃ·¶Î§£º1µ½(2 ^ 32 - 1)£¬²¢±£Ö¤Î¨Ò»ĞÔ¡£
-		             Èç¹û²»Ö¸¶¨£¨¼´ÉèÎª0£©£¬SDK »á×Ô¶¯·ÖÅäÒ»¸ö£¬²¢ÔÚ onJoinChannelSuccess »Øµ÷·½·¨ÖĞ·µ»Ø£¬App ²ã±ØĞë¼Ç×¡¸Ã·µ»ØÖµ²¢Î¬»¤£¬
-		             SDK²»¶Ô¸Ã·µ»ØÖµ½øĞĞÎ¬»¤ uid ÔÚ SDK ÄÚ²¿ÓÃ 32 Î»ÎŞ·ûºÅÕûÊı±íÊ¾£¬
-		             ÓÉÓÚ Java ²»Ö§³ÖÎŞ·ûºÅÕûÊı£¬uid ±»µ±³É 32 Î»ÓĞ·ûºÅÕûÊı´¦Àí£¬¶ÔÓÚ¹ı´óµÄÕûÊı£¬Java »á±íÊ¾Îª¸ºÊı£¬ÈçÓĞĞèÒª¿ÉÒÔÓÃ(uid & 0xffffffffL)×ª»»³É 64 Î»ÕûÊı*/
+		/*å‚æ•°	     æè¿°
+		token        é»˜è®¤å·²ç»è®¾ç½®ä¸ºnull
+		channelId    æ ‡è¯†é€šè¯çš„é¢‘é“åç§°ï¼Œé•¿åº¦åœ¨64å­—èŠ‚ä»¥å†…çš„å­—ç¬¦ä¸²ã€‚ä»¥ä¸‹ä¸ºæ”¯æŒçš„å­—ç¬¦é›†èŒƒå›´ï¼ˆå…±89ä¸ªå­—ç¬¦ï¼‰ : a - z, A - Z, 0 - 9, space, !#$%&, () + , -, :; <= .#$%&, () + , -, :; <= ., > ? @[], ^_, { | }, ~
+		info         é»˜è®¤è®¾ç½®ä¸ºç©º
+		uid          é»˜è®¤ä¸º0 (éå¿…é€‰é¡¹) ç”¨æˆ·IDï¼Œ32ä½æ— ç¬¦å·æ•´æ•°ã€‚å»ºè®®è®¾ç½®èŒƒå›´ï¼š1åˆ°(2 ^ 32 - 1)ï¼Œå¹¶ä¿è¯å”¯ä¸€æ€§ã€‚
+		             å¦‚æœä¸æŒ‡å®šï¼ˆå³è®¾ä¸º0ï¼‰ï¼ŒSDK ä¼šè‡ªåŠ¨åˆ†é…ä¸€ä¸ªï¼Œå¹¶åœ¨ onJoinChannelSuccess å›è°ƒæ–¹æ³•ä¸­è¿”å›ï¼ŒApp å±‚å¿…é¡»è®°ä½è¯¥è¿”å›å€¼å¹¶ç»´æŠ¤ï¼Œ
+		             SDKä¸å¯¹è¯¥è¿”å›å€¼è¿›è¡Œç»´æŠ¤ uid åœ¨ SDK å†…éƒ¨ç”¨ 32 ä½æ— ç¬¦å·æ•´æ•°è¡¨ç¤ºï¼Œ
+		             ç”±äº Java ä¸æ”¯æŒæ— ç¬¦å·æ•´æ•°ï¼Œuid è¢«å½“æˆ 32 ä½æœ‰ç¬¦å·æ•´æ•°å¤„ç†ï¼Œå¯¹äºè¿‡å¤§çš„æ•´æ•°ï¼ŒJava ä¼šè¡¨ç¤ºä¸ºè´Ÿæ•°ï¼Œå¦‚æœ‰éœ€è¦å¯ä»¥ç”¨(uid & 0xffffffffL)è½¬æ¢æˆ 64 ä½æ•´æ•°*/
 
 	UFUNCTION(BlueprintCallable, Category = "AgoraVoice")
 		int JoinChannel(const FString ChannelID,const FString Info= TEXT(""),int32 uid=0,const FString Token = TEXT("null") );
-	/*Àë¿ª·¿¼ä*/
+	/*ç¦»å¼€æˆ¿é—´*/
 	UFUNCTION(BlueprintCallable, Category = "AgoraVoice")
 		int LeaveChannel();
 	UFUNCTION(BlueprintCallable, Category = "AgoraVoice")
 		int SetEffectVolume(int volume);
-	/*½«×Ô¼º¾²Òô */
-	/*²ÎÊı  ÃèÊö
-	mute  boolÀàĞÍ trueÂó¿Ë·ç¾²Òô false Âó¿Ë·çÈ¡Ïû¾²Òô*/
+	void SaveLog(const FString &file);
+	/*å°†è‡ªå·±é™éŸ³ */
+	/*å‚æ•°  æè¿°
+	mute  boolç±»å‹ trueéº¦å…‹é£é™éŸ³ false éº¦å…‹é£å–æ¶ˆé™éŸ³*/
 	UFUNCTION(BlueprintCallable, Category = "AgoraVoice")
 		int MuteLocalAudioStream(bool mute);
-	/*¾²ÒôËùÓĞÔ¶¶ËÒôÆµ*/
-	/*²ÎÊı  ÃèÊö
-      mute  true ¾²ÒôËùÓĞÔ¶¶ËµÄÓÃ»§  false È¡Ïû¾²ÒôÔ¶¶ËµÄËùÓĞµÄ¿Í»§*/
+	int CreateAgoraRtcEngine();
+	/*é™éŸ³æ‰€æœ‰è¿œç«¯éŸ³é¢‘*/
+	/*å‚æ•°  æè¿°
+      mute  true é™éŸ³æ‰€æœ‰è¿œç«¯çš„ç”¨æˆ·  false å–æ¶ˆé™éŸ³è¿œç«¯çš„æ‰€æœ‰çš„å®¢æˆ·*/
 	UFUNCTION(BlueprintCallable, Category = "AgoraVoice")
 		int MuteAllRemoteAudioStreams(bool mute);
-	/*¾²ÒôÖ¸¶¨ÓÃ»§ÒôÆµ
-		²ÎÊı  ÃèÊö
-		uid    Ö¸¶¨ÓÃ»§ ID
-		muted  true Í£Ö¹½ÓÊÕºÍ²¥·ÅÖ¸¶¨ÒôÆµÁ÷ false ÔÊĞí½ÓÊÕºÍ²¥·ÅÖ¸¶¨ÒôÆµÁ÷*/
+	/*é™éŸ³æŒ‡å®šç”¨æˆ·éŸ³é¢‘
+		å‚æ•°  æè¿°
+		uid    æŒ‡å®šç”¨æˆ· ID
+		muted  true åœæ­¢æ¥æ”¶å’Œæ’­æ”¾æŒ‡å®šéŸ³é¢‘æµ false å…è®¸æ¥æ”¶å’Œæ’­æ”¾æŒ‡å®šéŸ³é¢‘æµ*/
 	UFUNCTION(BlueprintCallable, Category = "AgoraVoice")
 		int MuteRemoteAudioStream(int32 uid, bool mute);
+	void ReleaseRtcEgine();
+
+	virtual int32 GetFunctionCallspace(UFunction* Function, void* Parameters, FFrame* Stack) override;
+
 private:
 	IRtcEngine *RtcEngineInstance = nullptr;
 	//IRtcEngineParameter *RtcEngineParameter = nullptr;
 TSharedPtr<RtcEngineParameters> RtcEngineParameter;
-		int CreateAgoraRtcEngine();
-		class UAgoraVoiceCallBack *CallBackInstance;
+		
+		 UAgoraVoiceCallBack *CallBackInstance;
 	
 	
 	

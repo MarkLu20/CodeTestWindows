@@ -15,7 +15,7 @@
 /**
  * 
  */
- 
+class UOpenFireChatAPI;
 UCLASS()
 class CODETESTFORWINDOWS_API ULevelGameInstance : public UGameInstance
 {
@@ -26,6 +26,9 @@ public:
 		ULevelGameInstance(/*const FObjectInitializer &ObjectInializer*/);
 
 		virtual void Init() override;
+
+
+		virtual void Shutdown() override;
 
 public:
 	FLoadPackageAsyncDelegate _tmpDelegate;
@@ -49,6 +52,14 @@ public:
 	float	LastLoadIndex;
 	float StreamingArrayNum;
 	float loadtime = 0;
+	TWeakObjectPtr< UOpenFireChatAPI> OpenFire;
+		
+		UFUNCTION(BlueprintCallable, Category = "OpenFire")
+			void Login(FString ServerAddr, int32 ServerPort, bool bUseSSL, bool bUsePlainTextAuth, float PingInterval, float PingTimeOut, int32 MaxPingRetries, bool bPrivateChatFriendsOnly, const FString  &UserID, const FString &Auth);
+		UFUNCTION(BlueprintCallable, Category = "OpenFire")
+			void SendPrivateMessage(const FString &FromUser, const FString &ToUser, const FString &Msg);
+		UFUNCTION(BlueprintCallable, Category = "OpenFire")
+			void MucSendMessage(const FString& FromUser, const FString& Message, const FString &Type);
 private:
 	TArray<class ULevelStreaming *> StreamingArray;
 	int32 Index;

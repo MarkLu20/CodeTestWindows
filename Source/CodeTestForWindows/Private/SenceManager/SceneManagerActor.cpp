@@ -174,6 +174,7 @@ void ASceneManagerActor::Event_PostLoadMap()
 
 void ASceneManagerActor::Event_PackageAsync(const FName & PackageName, UPackage * Package, EAsyncLoadingResult::Type result, bool bAddToRoot)
 {
+	float a=Package->GetLoadTime();
 	FString pnStr = PackageName.ToString();
 	UE_LOG(LogTemp, Error, TEXT("-----package async --- package name = %s"), *pnStr);
 	UE_LOG(LogTemp, Error, TEXT("-----package async ---result type = %d"), *Package->GetName());

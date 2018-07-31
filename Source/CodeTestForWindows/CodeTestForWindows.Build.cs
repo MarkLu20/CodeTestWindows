@@ -8,11 +8,11 @@ public class CodeTestForWindows : ModuleRules
 	{
 		PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
 	
-		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore","HTTP","Json", "JsonUtilities","OnlineSubsystem","OnlineSubsystemUtils", "MXLoadingScreen" ,"Sockets","NetWorking","UMG", "SqliteSupport","AgoraVoice" });
+		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore","HTTP","Json", "JsonUtilities","OnlineSubsystem","OnlineSubsystemUtils", "MXLoadingScreen" ,"Sockets","NetWorking","UMG", "SqliteSupport","AgoraVoice", "WebSockets", "OpenFireChat" });
 
 
 		PrivateDependencyModuleNames.AddRange(new string[] { "Slate","SlateCore", "MXLoadingScreen" });
-        DynamicallyLoadedModuleNames.Add("OnlineSubsystemNull");
+        DynamicallyLoadedModuleNames.AddRange(new string[] { "OnlineSubsystemNull" });
 
         // Uncomment if you are using Slate UI
         // PrivateDependencyModuleNames.AddRange(new string[] { "Slate", "SlateCore" });
