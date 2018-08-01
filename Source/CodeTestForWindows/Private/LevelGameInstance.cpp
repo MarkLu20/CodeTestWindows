@@ -40,6 +40,7 @@ void ULevelGameInstance::Init()
 	UPackage::PackageDirtyStateChangedEvent.AddUObject(this,&ULevelGameInstance::DirtyPackage);
 	UTestObject *TestObject = NewObject<UTestObject>();
 	OpenFire = GetDefault<UOpenFireChatAPI>();
+	OpenFire->JoinedRoomArray.Empty();
 	
 	
 }
@@ -230,6 +231,11 @@ void ULevelGameInstance::SendPrivateMessage(const FString &FromUser, const FStri
 void ULevelGameInstance::MucSendMessage(const FString& FromUser, const FString& Message, const FString &Type)
 {
 	OpenFire->MucSendMessage(FromUser, Message, Type);
+}
+
+void ULevelGameInstance::JoinRoom(const FString &Room)
+{
+	OpenFire->JoinRoom(Room);
 }
 
 bool ULevelGameInstance::HasLoaded(FName PackageName)

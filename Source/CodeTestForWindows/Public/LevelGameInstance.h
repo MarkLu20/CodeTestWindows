@@ -60,6 +60,8 @@ public:
 			void SendPrivateMessage(const FString &FromUser, const FString &ToUser, const FString &Msg);
 		UFUNCTION(BlueprintCallable, Category = "OpenFire")
 			void MucSendMessage(const FString& FromUser, const FString& Message, const FString &Type);
+		UFUNCTION(BlueprintCallable, Category = "OpenFire")
+			void JoinRoom(const FString &Room);
 private:
 	TArray<class ULevelStreaming *> StreamingArray;
 	int32 Index;

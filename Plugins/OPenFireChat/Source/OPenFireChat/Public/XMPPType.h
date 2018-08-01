@@ -7,8 +7,7 @@
 /**
  * 
  */
-class UPrivateChat;
-class UMucChat;
+
 class FXmppModule;
 class IXmppConnection;
 class FXmppUserJid;

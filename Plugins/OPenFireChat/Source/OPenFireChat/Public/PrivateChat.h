@@ -20,10 +20,16 @@ public:
 	~UPrivateChat();
 
 	void SendPrivateChatMessage(const FString& FromUser,const FString& ToUser, const FString& Message);
+	
+	void InviteJoinRoom(const FString &FromUserName, const FString &ToUserName, const FString &RoomName);
+	void RequsetBeFriend(const FString &FromUser, const FString &ToUser, const FString);
+	IXmppChatPtr XmppChatPtr;
+	TWeakObjectPtr< UOpenFireChatAPI> OpenFireAPIInstance;
+private:
+	FString MucSym;
+	FString JoindeRoom;
 	void GetXmppChatPtr(const IXmppChatPtr& xmppChatPtr);
 	void OnReceiveChat(const TSharedRef<IXmppConnection>& Connection, const FXmppUserJid& FromJid, const TSharedRef<FXmppChatMessage>& ChatMsg);
-	IXmppChatPtr XmppChatPtr;
-	TWeakObjectPtr< UOpenFireChatAPI> OpenFireAPIInstance = nullptr;
 	
 	
 };

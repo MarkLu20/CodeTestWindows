@@ -13,6 +13,8 @@ UMucChat::UMucChat(const FObjectInitializer &ObjectInitializer):UObject(ObjectIn
 {
 	OpenFireIntance = GetDefault<UOpenFireChatAPI>();
 	OpenFireIntance->GetXmpptr.AddUObject(this,&UMucChat::GetXmppChatPtr);
+	MucSymo = FString(L"B82137CB4410705988D6FCB2C43EBBB4 8fec252d4D9E7F56009C8C9Da669ad9A");
+	
 }
 
 void UMucChat::GetXmppChatPtr(const IXmppChatPtr& xmppChatPtr)
@@ -20,11 +22,15 @@ void UMucChat::GetXmppChatPtr(const IXmppChatPtr& xmppChatPtr)
 	ChatPtr = xmppChatPtr;
 }
 
-void UMucChat::MucSendMessage(const FString& FromUser, const FString& Message, const FString &Type)
+void UMucChat::MucSendMessage(const FString& FromUser, const FString& Message, const FString &RoomName)
 {
+	if (OpenFireIntance->JoinedRoomArray.Num()>0)
+	{
+
+	
 	FUser = FromUser;
 	Msg = Message;
-	MsgType = Type;
+	MsgType = RoomName;
 	
 	
 	
@@ -34,6 +40,18 @@ void UMucChat::MucSendMessage(const FString& FromUser, const FString& Message, c
 	HttpRequest->SetHeader(TEXT("Content-Type"), TEXT("application/json;charset=utf-8"));
 	HttpRequest->OnProcessRequestComplete().BindUObject(this, &UMucChat::RepquestCompelete);
 	HttpRequest->ProcessRequest();
+	}
+	else
+	{
+		UE_LOG(LogTemp,Error,TEXT("Not Joinde Room"));
+	}
+}
+
+void UMucChat::JoinMucRoom(const FString &RoomName)
+{  
+	OpenFireIntance->JoinRoomDel.Broadcast(RoomName);
+	
+
 }
 
 void UMucChat::RepquestCompelete(FHttpRequestPtr HttpRequest, FHttpResponsePtr HttpResponse, bool bSucceeded)
@@ -41,8 +59,8 @@ void UMucChat::RepquestCompelete(FHttpRequestPtr HttpRequest, FHttpResponsePtr H
 
 	FXmppChatMessage ChatMessage;
 	ChatMessage.FromJid.Id = FUser;
-	FString Symo = FString(L" ");
-	FString Messge = Msg + Symo + MsgType;
+	
+	FString Messge = Msg + MucSymo + MsgType;
 	ChatMessage.Body = Messge;
 	ChatMessage.Timestamp = FDateTime::Now();
 	if (HttpResponse->GetResponseCode() == 200)
@@ -52,7 +70,7 @@ void UMucChat::RepquestCompelete(FHttpRequestPtr HttpRequest, FHttpResponsePtr H
 		TSharedRef<TJsonReader<TCHAR>> JsonReader = TJsonReaderFactory<TCHAR>::Create(HttpResponse->GetContentAsString());
 		if (FJsonSerializer::Deserialize(JsonReader, JsonParsed))
 		{
-			for (int32 i = 0; i < JsonParsed.Num(); i++)
+			for (int32 i = 0; i < JsonParsed.Num(); ++i)
 			{
 				FString TUser;
 				

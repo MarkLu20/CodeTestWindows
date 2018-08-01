@@ -10,10 +10,16 @@
 /**
  *
  */
-
+class UPrivateChat;
+class UMucChat;
 
 DECLARE_MULTICAST_DELEGATE_OneParam(FGetXmppPtr, const IXmppChatPtr&);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_FourParams(FReceiveChatMsg, const FString&, FromUser, const FString&, ToUser, const FString&, Message, const FString&, Timetamp);
+DECLARE_MULTICAST_DELEGATE_OneParam(FJoinRoomDel, const FString&);
+
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_FiveParams(FReceivePrivateChatMsg, const FString&, FromUser, const FString&, ToUser, const FString&, Message, const FString&, Type,const FString&, Timetamp);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_FourParams(FReceiveMucChatMsg, const FString&, FromUser, const FString&, Message, const FString&, Type, const FString&, Timetamp);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FReceiveRequestJoinRoom,const FString&,FromUser,const FString&,JoinRoomName);
+
 //class FXmppUserJid;
 UCLASS()
 class OPENFIRECHAT_API UOpenFireChatAPI : public UObject
@@ -69,17 +75,23 @@ public:
 
 	FGetXmppPtr GetXmpptr;
 	FDelegateHandle MucChatDelegate;
+	FJoinRoomDel JoinRoomDel;
+	
+	TMap<FString,FString> JoinedRoomArray;
 	//UPROPERTY(BlueprintAssignable, Category = "OpenFire")
-		FReceiveChatMsg ReceiveChatMsg;
+	FReceivePrivateChatMsg ReceiveChatMsg;
+	FReceiveMucChatMsg ReceiveMucChatMsg;
 		UFUNCTION(BlueprintCallable, Category = "OpenFire")
 			void CreatePublicRoom(const FString &UserName,const FString &RoomId,const FString &Passworld);
 		UFUNCTION(BlueprintCallable, Category = "OpenFire")
-			void JoinRoom(const FString &UserName,const FString &Room,const FString &NickName,const FString &Password);
+			void JoinRoom(const FString &Room);
 		UFUNCTION(BlueprintCallable, Category = "OpenFire")
 			void RoomChat(const FString &UserName,const FString &RoomId,const FString &Body,const FString &ExtraInfo);
 		void OnRoomChatReceived(const TSharedRef<IXmppConnection>& Connection, const FXmppRoomId& RoomId, const FXmppUserJid& UserJid, const TSharedRef<FXmppChatMessage>& ChatMsg);
 		UFUNCTION(BlueprintCallable, Category = "OpenFire")
-			void MucSendMessage(const FString& FromUser, const FString& Message, const FString &Type);
+			void MucSendMessage(const FString& FromUser, const FString& Message, const FString &RoomName);
+		
+		void JoinRoomCall(const FString &RoomName);
 
 public:
 	TSharedPtr<IXmppConnection> xmppConnectionPtr;

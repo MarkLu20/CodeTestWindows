@@ -30,6 +30,7 @@ class AGORASIGNAL_API UAgoraSDKManager : public UObject
 	
 public:
 	static UAgoraSDKManager *AgoraManagerInstance;
+	UFUNCTION(BlueprintCallable,Category = "fire")
 	static UAgoraSDKManager *GetAgoraSDKManagerInstance();
 	class UUnrealSignal *UnrealSignalInstance;
 	class UCallBack *CallBackInstance;
@@ -52,7 +53,7 @@ public:
 
 
 
-	UPROPERTY(BlueprintAssignable, Category = "Agora")
+	UPROPERTY(BlueprintAssignable,BlueprintCallable, Category = "Agora")
 		FOnReconnecting OnReconnecting;
 	UPROPERTY(BlueprintAssignable, Category = "Agora")
 		FOnReconnected OnReconnected;

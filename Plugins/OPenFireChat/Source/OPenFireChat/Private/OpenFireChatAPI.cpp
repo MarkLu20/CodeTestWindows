@@ -28,7 +28,7 @@ UOpenFireChatAPI::UOpenFireChatAPI(const FObjectInitializer &ObjectInitializer):
 
 UOpenFireChatAPI::~UOpenFireChatAPI()
 {
-
+	JoinedRoomArray.Empty();
 }
 
 //UOpenFireChatAPI * UOpenFireChatAPI::GetOpenFireInstance()
@@ -44,7 +44,7 @@ UOpenFireChatAPI::~UOpenFireChatAPI()
 //}
 
 void UOpenFireChatAPI::Login(FString ServerAddr, int32 ServerPort,bool bUseSSL,bool bUsePlainTextAuth,float PingInterval,float PingTimeOut,int32 MaxPingRetries,bool bPrivateChatFriendsOnly, const FString  &UserID, const FString &Auth)
-{
+{   
 	PrivateChat = GetDefault<UPrivateChat>();
 	MucChat = GetDefault<UMucChat>();
 	OpenFireInstance = GetDefault<UOpenFireChatAPI>();
@@ -52,6 +52,7 @@ void UOpenFireChatAPI::Login(FString ServerAddr, int32 ServerPort,bool bUseSSL,b
 	xmppConnectionPtr = XmppConnection->AsShared();
 	PrivateChatPtr = xmppConnectionPtr->PrivateChat();
 	XmppConnection->OnLoginComplete().AddUObject(this, &UOpenFireChatAPI::OnXmppLoginComplete);
+	OpenFireInstance->JoinRoomDel.AddUObject(this,&UOpenFireChatAPI::JoinRoomCall);
 	XmppPresencePtr = xmppConnectionPtr->Presence();
 	FXmppServer xmppserver;
 	xmppserver.ServerAddr = ServerAddr;
@@ -109,21 +110,9 @@ void UOpenFireChatAPI::CreatePublicRoom(const FString &UserName, const FString &
 
 }
 
-void UOpenFireChatAPI::JoinRoom(const FString &UserName, const FString &Room, const FString &NickName, const FString &Password)
+void UOpenFireChatAPI::JoinRoom( const FString &Room)
 {
-	TSharedPtr<IXmppConnection> Connection = XmppModule->GetConnection(UserName);
-	if (Connection->MultiUserChat().IsValid())
-	{
-		if (Password.IsEmpty())
-		{
-			Connection->MultiUserChat()->JoinPublicRoom(Room, NickName);
-		}
-		else
-		{
-			Connection->MultiUserChat()->JoinPrivateRoom(Room, NickName, Password);
-		}
-
-	}
+	MucChat->JoinMucRoom(Room);
 	
 }
 
@@ -144,8 +133,14 @@ void UOpenFireChatAPI::OnRoomChatReceived(const TSharedRef<IXmppConnection>& Con
 	Connection->MultiUserChat()->OnRoomChatReceived().Remove(MucChatDelegate);
 }
 
-void UOpenFireChatAPI::MucSendMessage(const FString& FromUser, const FString& Message, const FString &Type)
+void UOpenFireChatAPI::MucSendMessage(const FString& FromUser, const FString& Message, const FString &RoomName)
 {
-	MucChat->MucSendMessage(FromUser, Message, Type);
+	MucChat->MucSendMessage(FromUser, Message, RoomName);
+}
+
+void UOpenFireChatAPI::JoinRoomCall(const FString &RoomName)
+{
+	JoinedRoomArray.Add(RoomName,RoomName);
+	
 }
 

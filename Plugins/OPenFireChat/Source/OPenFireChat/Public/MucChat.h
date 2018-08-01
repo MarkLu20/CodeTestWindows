@@ -20,15 +20,19 @@ class OPENFIRECHAT_API UMucChat : public UObject
 	
 public:
 	UMucChat(const FObjectInitializer &ObjectInitializer);
-	void GetXmppChatPtr(const IXmppChatPtr& xmppChatPtr);
-	void MucSendMessage(const FString& FromUser, const FString& Message,const FString &Type);
-	void RepquestCompelete(FHttpRequestPtr HttpRequest, FHttpResponsePtr HttpResponse, bool bSucceeded);
+	
+	void MucSendMessage(const FString& FromUser, const FString& Message,const FString &RoomName);
+	void JoinMucRoom(const FString &RoomName);
+	
 	
 private:
-	TWeakObjectPtr<class UOpenFireChatAPI> OpenFireIntance = nullptr;
+	TWeakObjectPtr<class UOpenFireChatAPI> OpenFireIntance;
 	IXmppChatPtr ChatPtr;
 	FString FUser;
 	FString Msg;
 	FString MsgType;
+	FString MucSymo;
+	void GetXmppChatPtr(const IXmppChatPtr& xmppChatPtr);
+	void RepquestCompelete(FHttpRequestPtr HttpRequest, FHttpResponsePtr HttpResponse, bool bSucceeded);
 	
 };
