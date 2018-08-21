@@ -3,6 +3,7 @@
 #include "TestObject.h"
 #include "Engine.h"
 #include "ScopeLock.h"
+#include "LevelGameInstance.h"
 UTestObject *UTestObject::TestInstance = nullptr;
 UTestObject::UTestObject(const FObjectInitializer &ObjectInitializer):UObject(ObjectInitializer)
 {
@@ -32,6 +33,18 @@ UTestObject * UTestObject::GetTestInstance()
 	
 	return TestInstance;
 }
+
+void UTestObject::Test(int a, float b, UGameInstance *gameinstance)
+{
+	if (Cast<ULevelGameInstance>(gameinstance))
+	{
+		//Cast<ULevelGameInstance>(gameinstance)->PassFunction<UTestObject>(TestInstance);
+	}
+	float c = static_cast<float>(a);
+	float d = c + b;
+	UE_LOG(LogTemp, Error, TEXT("%f floattotal"), d);
+}
+
 FString UTestObject::DisPlayEnumName(EChatType ChatType)
 {
 

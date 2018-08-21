@@ -8,11 +8,13 @@ public class CodeTestForWindows : ModuleRules
 	{
 		PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
 	
-		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore","HTTP","Json", "JsonUtilities","OnlineSubsystem","OnlineSubsystemUtils", "MXLoadingScreen" ,"Sockets","NetWorking","UMG", "SqliteSupport","AgoraVoice", "WebSockets", "OpenFireChat" });
+		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore","HTTP","Json", "WebSockets", "JsonUtilities","OnlineSubsystem","OnlineSubsystemUtils", "MXLoadingScreen" ,"Sockets","NetWorking","UMG", "SqliteSupport","AgoraVoice", "OpenFireChat","AIModule","GameplayTasks", "HeadMountedDisplay","AgoraSignal" });
 
 
 		PrivateDependencyModuleNames.AddRange(new string[] { "Slate","SlateCore", "MXLoadingScreen" });
         DynamicallyLoadedModuleNames.AddRange(new string[] { "OnlineSubsystemNull" });
+        Definitions.Add("WITH_WEBSOCKETS=1");
+        
 
         // Uncomment if you are using Slate UI
         // PrivateDependencyModuleNames.AddRange(new string[] { "Slate", "SlateCore" });

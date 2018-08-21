@@ -13,14 +13,23 @@ using namespace rtc;
 /**
  *
  */class UAgoraVoiceCallBack;
-UCLASS()
+UCLASS(BlueprintType)
 class AGORAVOICE_API UAgoraVoiceAPI : public UObject
 {
 	GENERATED_BODY()
 public:
 	UAgoraVoiceAPI(const FObjectInitializer &ObjectInitializer);
 	UFUNCTION(BlueprintCallable, Category = "AgoraVoice")
-		 int Login (const FString appID);
+
+		 int Login ();
+		
+	UFUNCTION(BlueprintCallable, Category = "AgoraVoice")
+	static UAgoraVoiceAPI* GetAgoraVoiceAPIInstance();
+	
+
+
+		
+
 
 	/*设置频道属性(setChannelProfile)
 		CHANNEL_PROFILE_COMMUNICATION	通信为默认模式，用于常见的一对一或群聊，频道中的任何用户可以自由说话
@@ -49,7 +58,7 @@ public:
 		             由于 Java 不支持无符号整数，uid 被当成 32 位有符号整数处理，对于过大的整数，Java 会表示为负数，如有需要可以用(uid & 0xffffffffL)转换成 64 位整数*/
 
 	UFUNCTION(BlueprintCallable, Category = "AgoraVoice")
-		int JoinChannel(const FString ChannelID,const FString Info= TEXT(""),int32 uid=0,const FString Token = TEXT("null") );
+		int JoinChannel(const FString &ChannelID,int32 uid=0,const FString &Token = TEXT("null") );
 	/*离开房间*/
 	UFUNCTION(BlueprintCallable, Category = "AgoraVoice")
 		int LeaveChannel();
@@ -61,7 +70,7 @@ public:
 	mute  bool类型 true麦克风静音 false 麦克风取消静音*/
 	UFUNCTION(BlueprintCallable, Category = "AgoraVoice")
 		int MuteLocalAudioStream(bool mute);
-	int CreateAgoraRtcEngine();
+
 	/*静音所有远端音频*/
 	/*参数  描述
       mute  true 静音所有远端的用户  false 取消静音远端的所有的客户*/
@@ -73,16 +82,23 @@ public:
 		muted  true 停止接收和播放指定音频流 false 允许接收和播放指定音频流*/
 	UFUNCTION(BlueprintCallable, Category = "AgoraVoice")
 		int MuteRemoteAudioStream(int32 uid, bool mute);
+	UFUNCTION(BlueprintCallable, Category = "AgoraVoice")
+		int32 GetUserUID();
 	void ReleaseRtcEgine();
+		/** The MyProperty */
+	UPROPERTY(BlueprintReadOnly, Category = "AgoraVoice")
+		int32 Uid=0;
+
 
 	virtual int32 GetFunctionCallspace(UFunction* Function, void* Parameters, FFrame* Stack) override;
 
 private:
 	IRtcEngine *RtcEngineInstance = nullptr;
+	static UAgoraVoiceAPI* AgoraVoiceInstance;
 	//IRtcEngineParameter *RtcEngineParameter = nullptr;
 TSharedPtr<RtcEngineParameters> RtcEngineParameter;
 		
-		 UAgoraVoiceCallBack *CallBackInstance;
+	UAgoraVoiceCallBack *CallBackInstance;
 	
 	
 	

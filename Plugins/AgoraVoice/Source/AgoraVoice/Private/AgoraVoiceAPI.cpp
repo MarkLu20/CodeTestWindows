@@ -4,34 +4,38 @@
 //#include <afxstr.h>
 #include  "AgoraVoiceCallBack.h"
 #include "Kismet/KismetStringLibrary.h"
-
+#include <stdio.h>
+#include <iostream>
+using namespace std;
+UAgoraVoiceAPI *UAgoraVoiceAPI::AgoraVoiceInstance = nullptr;
 UAgoraVoiceAPI::UAgoraVoiceAPI(const FObjectInitializer &ObjectInitializer) :UObject(ObjectInitializer)
 {
-	
+	//CallBackInstance = UAgoraVoiceCallBack::GetAgoraVoiceCBInstance();
+	CallBackInstance = CreateDefaultSubobject<UAgoraVoiceCallBack>(TEXT("CallBackInstance"));
 }
 
-int UAgoraVoiceAPI::CreateAgoraRtcEngine()
-{
-	
-	CallBackInstance = NewObject<UAgoraVoiceCallBack>();
-	CallBackInstance->AddToRoot();
-	RtcEngineInstance = createAgoraRtcEngine();
 
-	RtcEngineParameter = MakeShareable<RtcEngineParameters>(new RtcEngineParameters(RtcEngineInstance));
-	
-	 return 0;
-	
-}
 
-int UAgoraVoiceAPI::Login( const FString appID)
+int UAgoraVoiceAPI::Login()
 {    
 	//LPCTSTR appid= "fb50b66cf43940679083c25b520192b0";
+	RtcEngineInstance= (IRtcEngine *)createAgoraRtcEngine();
 	RtcEngineContext rtcEngineContext;
 
 	rtcEngineContext.appId = "c3155a998bd446f3abc0cab6a12aeabf";  //TCHAR_TO_UTF8(*appID);
 	rtcEngineContext.eventHandler = CallBackInstance;
 	return RtcEngineInstance->initialize(rtcEngineContext);
 	
+}
+
+UAgoraVoiceAPI* UAgoraVoiceAPI::GetAgoraVoiceAPIInstance()
+{
+	if (AgoraVoiceInstance==nullptr)
+	{
+		AgoraVoiceInstance = NewObject<UAgoraVoiceAPI>();
+		AgoraVoiceInstance->AddToRoot();
+	}
+	return AgoraVoiceInstance;
 }
 
 int UAgoraVoiceAPI::SetChanelProfile(ECHANNEL_PROFILE_TYPE ChannelProfile)
@@ -57,21 +61,9 @@ int UAgoraVoiceAPI::SetAudioProfile(EAUDIO_PROFILE_TYPE AudioProfile, EAUDIO_SCE
 	return  RtcEngineInstance->setAudioProfile(static_cast<AUDIO_PROFILE_TYPE>(AudioProfile),static_cast<AUDIO_SCENARIO_TYPE>(AudioScenario));
 }
 
-int UAgoraVoiceAPI::JoinChannel(const FString ChannelID, const FString Info, int32 uid, const FString Token)
+int UAgoraVoiceAPI::JoinChannel(const FString &ChannelID, int32 uid, const FString &Token)
 {
-	FString test="fsdafweefwef";
-	FName name = FName("eerererweryuyi");
-	if (test=="fsdafweefwef")
-	{
-		if (name==FName("eerererweryuyi"))
-		{
-			test[0] = 'a';
-		}
-	}
-
-	
-	//int32 UKismetStringLibrary::Conv_StringToInt(FGuid::NewGuid().ToString());
-	return RtcEngineInstance->joinChannel(TCHAR_TO_UTF8(*Token),TCHAR_TO_UTF8(*ChannelID),TCHAR_TO_UTF8(*Info),static_cast<uid_t>(uid));
+	return RtcEngineInstance->joinChannel(NULL, TCHAR_TO_UTF8(*ChannelID),NULL,static_cast<uid_t>(uid));
 }
 
 int UAgoraVoiceAPI::LeaveChannel()
@@ -104,9 +96,19 @@ int UAgoraVoiceAPI::MuteRemoteAudioStream(int32 uid, bool mute)
 	return RtcEngineParameter->muteRemoteAudioStream(static_cast<uid_t>(uid),mute);
 }
 
+int32 UAgoraVoiceAPI::GetUserUID()
+{
+	if (Uid!=0)
+	{
+		return Uid;
+	}
+	UE_LOG(LogTemp,Error,TEXT("not joined room Success"));
+	return -1;
+}
+
 void UAgoraVoiceAPI::ReleaseRtcEgine()
 {
-	RtcEngineInstance->release();
+	//RtcEngineInstance->release();
 }
 
 int32 UAgoraVoiceAPI::GetFunctionCallspace(UFunction* Function, void* Parameters, FFrame* Stack)

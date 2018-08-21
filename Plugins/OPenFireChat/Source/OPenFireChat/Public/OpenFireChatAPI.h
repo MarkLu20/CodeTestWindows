@@ -30,11 +30,11 @@ private:
 
 
 
-	FXmppModule *XmppModule;
+	FXmppModule *XmppModule =nullptr;
 
 	IXmppPresencePtr XmppPresencePtr;
 	
-	TWeakObjectPtr< UOpenFireChatAPI>  OpenFireInstance = nullptr;
+	TWeakObjectPtr< UOpenFireChatAPI>  OpenFireInstance;
 	//const UOpenFireChatAPI *const test1;//内容和指向都不能修改
 	//TMap<const FString&, const FString &> testMap;
 	//FObjectInitializer Objectint;

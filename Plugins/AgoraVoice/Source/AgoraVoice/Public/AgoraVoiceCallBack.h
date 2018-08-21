@@ -66,5 +66,6 @@ public:
 
 private:
 	static UAgoraVoiceCallBack *AgoraVoiceCBInstance;
+	TWeakObjectPtr<class UAgoraVoiceAPI> VoiceAPI;
 	
 };

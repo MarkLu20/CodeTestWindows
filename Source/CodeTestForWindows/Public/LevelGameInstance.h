@@ -9,6 +9,7 @@
 #include "SceneManagerActor.h"
 #include "MXLoadingScreen/Public/MXLoadingScreen.h"
 #include "Package.h"
+#include "UnrealSignal.h"
 #include "SqliteSupport.h"
 #include "LevelGameInstance.generated.h"
 
@@ -62,9 +63,31 @@ public:
 			void MucSendMessage(const FString& FromUser, const FString& Message, const FString &Type);
 		UFUNCTION(BlueprintCallable, Category = "OpenFire")
 			void JoinRoom(const FString &Room);
+		UFUNCTION(BlueprintCallable, Category = "OpenFire")
+			void InivteJoinRoom(const FString &FromUser,const FString &ToUser,const FString &RoomName );
+		UFUNCTION(BlueprintCallable, Category = "OpenFire")
+			void InviteJoinRoom(const FString &FromUser, const FString &ToUser, const FString &RoomName);
+		void Test(int a, float b);
+		UFUNCTION(BlueprintCallable)
+			void  TestFunction();
+		/** Does the thing. */
+		UFUNCTION(BlueprintCallable, Category = "Game Play")
+			void ExcuteExe(const FString &Path);
+
+		template<typename T>
+		void PassFunction(T *oject)
+		{   
+8			//testfuncPointer= [oject](int val, float valf) { oject->Test(val, valf); };
+		
+		};
+
 private:
 	TArray<class ULevelStreaming *> StreamingArray;
 	int32 Index;
 	bool HasLoaded(FName PackageName);
+	TFunction<void(int,float)> testfuncPointer;
 	//TSharedPtr < SMXLoadingScreenWidget >LoadingScreenWidget;
 };
+
+
+

@@ -13,7 +13,10 @@
 #include "TestObject.h"
 #include "OpenFireChatAPI.h"
 #include "Runtime/CoreUObject/Public/CoreUObjectSharedPCH.h"
+#include "TestObject.h"
+#include "LuachuGameProcess.h"
 
+//#define HUIDIAO(X) [X](int val, float valf) { X->Test(val, valf)
 //#include "Serialization/AsyncLoadingPrivate.h"
 
 ULevelGameInstance::ULevelGameInstance(/*const FObjectInitializer &ObjectInitializer*/)
@@ -41,6 +44,13 @@ void ULevelGameInstance::Init()
 	UTestObject *TestObject = NewObject<UTestObject>();
 	OpenFire = GetDefault<UOpenFireChatAPI>();
 	OpenFire->JoinedRoomArray.Empty();
+	UTestObject *Testobjectc = nullptr;
+	Testobjectc = UTestObject::GetTestInstance();
+	
+	//testfuncPointer = [Testobjectc](int val, float valf) { Testobjectc->Test(val, valf); };
+	//testfuncPointer=FindFunction(FName("Test"));
+	//testfuncPointer = HUIDIAO(UTestObject);
+	
 	
 	
 }
@@ -220,6 +230,8 @@ void ULevelGameInstance::MixScreen()
 void ULevelGameInstance::Login(FString ServerAddr, int32 ServerPort, bool bUseSSL, bool bUsePlainTextAuth, float PingInterval, float PingTimeOut, int32 MaxPingRetries, bool bPrivateChatFriendsOnly, const FString &UserID, const FString &Auth)
 {
 	OpenFire->Login(ServerAddr, ServerPort, bUseSSL, bUsePlainTextAuth, PingInterval, PingTimeOut, MaxPingRetries, bPrivateChatFriendsOnly, UserID, Auth);
+    FString guid=FGuid::NewGuid().ToString();
+	UE_LOG(LogTemp,Error,TEXT("%s"),*guid);
 }
 
 void ULevelGameInstance::SendPrivateMessage(const FString &FromUser, const FString &ToUser, const FString &Msg)
@@ -236,6 +248,37 @@ void ULevelGameInstance::MucSendMessage(const FString& FromUser, const FString& 
 void ULevelGameInstance::JoinRoom(const FString &Room)
 {
 	OpenFire->JoinRoom(Room);
+}
+
+void ULevelGameInstance::InivteJoinRoom(const FString & FromUser, const FString & ToUser, const FString & RoomName)
+{
+	//OpenFire->InviteJoinRoom(FromUser,ToUser,RoomName);
+}
+
+
+void ULevelGameInstance::InviteJoinRoom(const FString &FromUser, const FString &ToUser, const FString &RoomName)
+{
+
+}
+
+void ULevelGameInstance::Test(int a, float b)
+{
+	float c = static_cast<float>(a);
+	float d = c + b;
+	UE_LOG(LogTemp,Error,TEXT("%f floattotal"),d);
+}
+
+void ULevelGameInstance::TestFunction()
+{
+	testfuncPointer(1,100.0f);
+}
+
+
+
+void ULevelGameInstance::ExcuteExe(const FString &Path)
+{
+	TWeakObjectPtr<ULuachuGameProcess> lachuptr = GetDefault<ULuachuGameProcess>();
+	lachuptr->ExcuteExe(Path);
 }
 
 bool ULevelGameInstance::HasLoaded(FName PackageName)

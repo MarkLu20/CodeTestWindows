@@ -67,7 +67,7 @@ public class AgoraSignal : ModuleRules
         if (Target.Platform == UnrealTargetPlatform.Win32 || Target.Platform == UnrealTargetPlatform.Win64) 
             {
             string OSVersion = (Target.Platform == UnrealTargetPlatform.Win32) ? "x86" : "x64";
-            PrivateIncludePaths.Add(Path.Combine(AgoraLibrary, OSVersion, "include"));
+            PublicIncludePaths.Add(Path.Combine(AgoraLibrary, OSVersion, "include"));
             string LibPath = Path.Combine(AgoraLibrary, OSVersion, "lib");
             System.Console.WriteLine("LibPath------" + LibPath);
             string DllPath = Path.Combine(AgoraLibrary, OSVersion, "dll");

@@ -21,19 +21,22 @@ class CODETESTFORWINDOWS_API UWebSocketTest : public UObject
 public:
 		UWebSocketTest(const FObjectInitializer &ObjectInitializer);
 
-		TSharedRef<IWebSocket> CreateWebScoket(const FString& Url, const TArray<FString>& Protocols, const TMap<FString, FString>& UpgradeHeaders = TMap<FString, FString>());
-		void Closeoncet();
+		TSharedRef<IWebSocket> CreateWebScoket(FString Url,  TArray<FString> Protocols, TMap<FString, FString> UpgradeHeaders = TMap<FString, FString>());
+		void Closeoncet(const FString& Url, const TArray<FString>& Protocols, const TMap<FString, FString>& UpgradeHeaders = TMap<FString, FString>());
+		bool Isoncet(const FString& Url, const TArray<FString>& Protocols, const TMap<FString, FString>& UpgradeHeaders = TMap<FString, FString>());
 private:
 	//TSharedRef<IWebSocket> WebSocketIntance;
-	
+	class FWebSocketsModule *WSModule =nullptr;
+	TSharedPtr<IWebSocket> WebSocketPtr;
 	FMyIntDelegate test;
+public:
 	UFUNCTION()
-	void OnConnectionError(const FString &ErrrorInfo);
+	void onErrorCB(const FString &ErrrorInfo);
 	UFUNCTION()
-	void OnConnected(const FString & Info);
+	void onConnectedCB();
 	UFUNCTION()
-	void OnClosed(int32 StatusCode,const FString &Reason,bool bWasClean);
+	void Closed(int32 StatusCode,const FString &Reason,bool bWasClean);
 	UFUNCTION()
-	void OnMessage(const FString &MessageStr);
+	void onMessageCB(const FString &MessageStr);
 	
 };

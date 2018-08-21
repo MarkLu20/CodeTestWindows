@@ -93,7 +93,7 @@ public class AgoraVoice : ModuleRules
                 File.Copy(Path.Combine(DllPath, "agora_rtc_sdk.dll"), Path.Combine(ProjectBinariesDir, "agora_rtc_sdk.dll"));
                 //File.Copy(Path.Combine(DllPath, "agora_sig_sdk.dll"), Path.Combine(ProjectBinariesDir, "agora_sig_sdk.dll"));
                 File.Copy(Path.Combine(DllPath, "agora_rtc_sdk.dll"), Path.Combine(BinariesDir, "agora_rtc_sdk.dll"));
-                // File.Copy(Path.Combine(DllPath, "agora_sig_sdk.dll"),Path.Combine(BinariesDir, "agora_sig_sdk.dll"));
+                File.Copy(Path.Combine(DllPath, "agora_sig_sdk.dll"),Path.Combine(BinariesDir, "agora_sig_sdk.dll"));
             }
             catch (Exception e) {
 

@@ -8,6 +8,8 @@ UHttpObject* UHttpObject::httpObject = nullptr;
 void UHttpObject::SetUrl(FString ServerAddr)
 {
 	HttpObject = NewObject<UHttpObject>();
+	//p = NewObject<UHttpObject>();
+	//p= NewObject<UHttpObject>();*/
 	HttpObject->AddToRoot();
 
 
@@ -26,7 +28,7 @@ void UHttpObject::SetUrl(FString ServerAddr)
 
 void UHttpObject::RepquestCompelete(FHttpRequestPtr HttpRequest, FHttpResponsePtr HttpResponse, bool bSucceeded)
 {
-	httpObject->RemoveFromRoot();
+	//httpObject->RemoveFromRoot();
 	FText SS = LOCTEXT("中俄无奈", "中文");
 	FString Content = HttpResponse->GetContentAsString();
 	if (bSucceeded)

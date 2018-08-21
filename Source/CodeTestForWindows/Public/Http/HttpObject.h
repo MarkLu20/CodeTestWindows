@@ -52,4 +52,5 @@ public:
 private:
 		static UHttpObject *httpObject;
 		UHttpObject *HttpObject = nullptr;
+		  UHttpObject* const p =HttpObject;
 };

@@ -2,13 +2,14 @@
 
 #include "AgoraVoiceCallBack.h"
 #include "ScopeLock.h"
+#include "AgoraVoiceAPI.h"
 
 
 
 UAgoraVoiceCallBack *UAgoraVoiceCallBack::AgoraVoiceCBInstance = nullptr;
 UAgoraVoiceCallBack::UAgoraVoiceCallBack(const FObjectInitializer &ObjectInitializer) :UObject(ObjectInitializer)
 {
-
+	VoiceAPI = GetDefault<UAgoraVoiceAPI>();
 }
 
 UAgoraVoiceCallBack * UAgoraVoiceCallBack::GetAgoraVoiceCBInstance()
@@ -38,8 +39,9 @@ void UAgoraVoiceCallBack::onError(int err, const char* msg)
 }
 
 void UAgoraVoiceCallBack::onJoinChannelSuccess(const char* channel, uid_t uid, int elapsed)
-{
-	
+{   
+	VoiceAPI->Uid = static_cast<int32>(uid);
+	UE_LOG(LogTemp, Warning, TEXT("onJoinChannelSuccess"));
 }
 
 void UAgoraVoiceCallBack::onLeaveChannel(const RtcStats& stats)
@@ -49,6 +51,7 @@ void UAgoraVoiceCallBack::onLeaveChannel(const RtcStats& stats)
 
 void UAgoraVoiceCallBack::onRejoinChannelSuccess(const char* channel, uid_t uid, int elapsed)
 {
+
 	UE_LOG(LogTemp, Warning, TEXT("erew"));
 }
 

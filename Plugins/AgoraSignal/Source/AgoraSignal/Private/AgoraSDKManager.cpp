@@ -36,9 +36,15 @@ UAgoraSDKManager * UAgoraSDKManager::GetAgoraSDKManagerInstance()
 		}
 		
 	}
+	
 	return AgoraManagerInstance;
 }
 
+
+void UAgoraSDKManager::Bind()
+{
+	AgoraManagerInstance->OnReconnecting.AddDynamic(this, &UAgoraSDKManager::OnrenecCall);
+}
 
 void UAgoraSDKManager::CallBackSet()
 {
@@ -60,6 +66,11 @@ TArray<FString> UAgoraSDKManager::LoadAccout(FString Path)
 void UAgoraSDKManager::GetAgroaInstance(FString AppId)
 {
 	UnrealSignalInstance->GetAgroaInstance(AppId);
+}
+
+void UAgoraSDKManager::OnrenecCall(int32 par)
+{
+	UE_LOG(LogTemp,Error,TEXT("%d"),par);
 }
 
 void UAgoraSDKManager::Login(const FString AppID, const FString Accout,  const FString Token, int32 uid, const FString DeviceID)

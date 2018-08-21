@@ -1,52 +1,85 @@
-// Fill out your copyright notice in the Description page of Project Settings.
+﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 #include "WebSocketTest.h"
+#include "Engine.h"
 #include "Runtime/Online/WebSockets/Public/WebSocketsModule.h"
+#include "Runtime/Online/WebSockets/Public/IWebSocketsManager.h"
 #include "Runtime/Online/WebSockets/Public/IWebSocket.h"
-
+#include "ModuleManager.h"
 
 
  UWebSocketTest::UWebSocketTest(const FObjectInitializer &ObjectInitializer)
 {
-
+	 WSModule = FModuleManager::LoadModulePtr<FWebSocketsModule>("WebSockets");
 }
 
- TSharedRef<IWebSocket> UWebSocketTest::CreateWebScoket(const FString& Url, const TArray<FString>& Protocols, const TMap<FString, FString>& UpgradeHeaders /*= TMap<FString, FString>()*/)
+ TSharedRef<IWebSocket> UWebSocketTest::CreateWebScoket( FString Url,  TArray<FString> Protocols,  TMap<FString, FString>  UpgradeHeaders /*= TMap<FString, FString>()*/)
  {
-	 TSharedRef<IWebSocket> WebSocket = FWebSocketsModule::Get().CreateWebSocket(Url, Protocols);
+	 
+	 //TSharedPtr<IWebSocketsManager> wsmanager = MakeShareable<IWebSocketsManager>(new IWebSocketsManager);
+	 TArray<FString> TestWebStr;
+	 TestWebStr.Add(TEXT("ws"));
+	 TestWebStr.Add(TEXT("wss"));
+	 //TestWebStr.Add(TEXT("v10.stomp"));
+	 //TestWebStr.Add(TEXT("v11.stomp"));
+	 TestWebStr.Add("Protocol");
+	 TestWebStr.Add("Protocol-v2");
+	 //testWeb->CreateWebScoket(FString("wss://echo.websocket.org"),TestWebStr);
+	 FString url = FString(TEXT("wss://echo.websocket.org"));
+	 TSharedRef<IWebSocket> WebSocket = WSModule->CreateWebSocket(url);
+	 WebSocketPtr = WebSocket;
+	//WebSocket->
 	// WebSocketIntance = WebSocket
-	 WebSocket->OnConnected().AddUFunction(this, FName("OnConnected"));
-	 WebSocket->OnConnectionError().AddUFunction(this, FName("OnConnectionError"));
-	 WebSocket->OnClosed().AddUFunction(this, FName("OnClosed"));
-	 WebSocket->OnMessage().AddUFunction(this, FName("OnMessage"));
-	 WebSocket->Connect();
-	 WebSocket->Send("TestWebSocket");
-	 WebSocket->Close();
-	 return  WebSocket;
+	 //WebSocket->
+	 WebSocketPtr->Connect();
+	 WebSocketPtr->OnConnected().AddUObject(this,  &UWebSocketTest::onConnectedCB);
+	
+	 WebSocketPtr->OnClosed().AddUObject(this,&UWebSocketTest::Closed);
+	WebSocket->OnConnectionError().AddUObject(this,&UWebSocketTest::onErrorCB);
+	 //WebSocketPtr->OnClosed().AddUFunction(this,  FName("Closed"));
+	 WebSocketPtr->OnMessage().AddUObject(this,&UWebSocketTest::onMessageCB);
+	// WebSocket->Send(FString("hhahahahh ahaa "));
+	 
+	// WebSocket->Send("TestWebSocket");
+	// WebSocket->Close();
+	//return  TSharedRef<IWebSocket>();
+	 return WebSocket;
+	
  }
 
- void UWebSocketTest::Closeoncet()
+
+
+ void UWebSocketTest::Closeoncet(const FString& Url, const TArray<FString>& Protocols, const TMap<FString, FString>& UpgradeHeaders /*= TMap<FString, FString>()*/)
  {
-
+	 TSharedRef<IWebSocket> WebSocket = WSModule->CreateWebSocket(Url, Protocols);
+	 WebSocketPtr->Close();
+	 
  }
 
- void UWebSocketTest::OnConnectionError(const FString &ErrrorInfo)
+ bool UWebSocketTest::Isoncet(const FString& Url, const TArray<FString>& Protocols, const TMap<FString, FString>& UpgradeHeaders /*= TMap<FString, FString>()*/)
+ {  
+	 TSharedRef<IWebSocket> WebSocket = WSModule->CreateWebSocket(Url, Protocols);
+	 return  WebSocket->IsConnected();
+ }
+
+ void UWebSocketTest::onErrorCB(const FString &ErrrorInfo)
  {
 	 UE_LOG(LogTemp, Error, TEXT("OnConnectionError %s"), *ErrrorInfo);
  }
 
- void UWebSocketTest::OnConnected(const FString & Info)
+ void UWebSocketTest::onConnectedCB()
  {
-	 UE_LOG(LogTemp, Error, TEXT("OnConnected %s"), *Info);
+	 UE_LOG(LogTemp, Error, TEXT("OnConnected"));
+	 WebSocketPtr->Send(FString("hahahahhahahahahhhahaha h"));
  }
 
 
- void UWebSocketTest::OnClosed(int32 StatusCode, const FString &Reason, bool bWasClean)
+ void UWebSocketTest::Closed(int32 StatusCode, const FString &Reason, bool bWasClean)
  {
 	 UE_LOG(LogTemp, Error, TEXT("OnClosed %s,%d"),*Reason, StatusCode);
  }
 
- void UWebSocketTest::OnMessage(const FString &MessageStr)
+ void UWebSocketTest::onMessageCB(const FString &MessageStr)
  {
 	 UE_LOG(LogTemp, Error, TEXT("OnMessage %s"), *MessageStr);
  }

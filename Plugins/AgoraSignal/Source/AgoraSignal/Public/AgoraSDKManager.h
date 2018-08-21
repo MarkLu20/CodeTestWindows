@@ -32,6 +32,8 @@ public:
 	static UAgoraSDKManager *AgoraManagerInstance;
 	UFUNCTION(BlueprintCallable,Category = "fire")
 	static UAgoraSDKManager *GetAgoraSDKManagerInstance();
+	UFUNCTION(BlueprintCallable)
+	void Bind();
 	class UUnrealSignal *UnrealSignalInstance;
 	class UCallBack *CallBackInstance;
 	TArray<FString> AccountArray;
@@ -75,4 +77,8 @@ public:
 		FOnMessageChannelReceive OnMessageChannelReceive;
 	UPROPERTY(BlueprintAssignable, Category = "Agora")
 		FOnLoginOut OnLoginOut;
+private:
+	UFUNCTION()
+	void OnrenecCall(int32 par);
+
 };

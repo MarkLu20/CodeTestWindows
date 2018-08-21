@@ -8,9 +8,7 @@
 UAgoraVoiceManager *UAgoraVoiceManager::VoiceManager = nullptr;
 UAgoraVoiceManager::UAgoraVoiceManager(const FObjectInitializer &ObjectInitializer)
 {
-	VoiceAPI = NewObject<UAgoraVoiceAPI>();
-	API= NewObject<UAgoraVoiceAPI>();
-	VoiceAPI->AddToRoot();
+	VoiceAPI = GetDefault<UAgoraVoiceAPI>();
 	//VoiceAPI->AddToRoot();
 }
 
@@ -29,20 +27,50 @@ UAgoraVoiceManager* UAgoraVoiceManager::GetVoiceManager()
 	return VoiceManager;
 }
 
-void UAgoraVoiceManager::Login(const FString Appid)
+void UAgoraVoiceManager::Login()
 {
-	VoiceAPI->CreateAgoraRtcEngine();
-	VoiceAPI->Login(Appid);
+	//VoiceAPI->CreateAgoraRtcEngine();
+	VoiceAPI->Login();
 	
 	
 }
 
-int UAgoraVoiceManager::JoinChannel(const FString RoomName)
+int UAgoraVoiceManager::JoinChannel(const FString &ChannelID, int32 uid /*= 0*/, const FString &Token /*= TEXT("null")*/)
 {
-	return VoiceAPI->JoinChannel(RoomName);
+	return VoiceAPI->JoinChannel(ChannelID,uid,Token);
 }
 
 void UAgoraVoiceManager::ReleaseRtcEgine()
 {
 	VoiceAPI->ReleaseRtcEgine();
+}
+
+void UAgoraVoiceManager::LeaveChannel()
+{
+	VoiceAPI->LeaveChannel();
+}
+
+void UAgoraVoiceManager::EnableAudio()
+{
+	VoiceAPI->EnableAudio();
+}
+
+void UAgoraVoiceManager::DisableAudio()
+{
+	VoiceAPI->DisableAudio();
+}
+
+void UAgoraVoiceManager::MuteLocalAudioStream(bool mute)
+{
+	VoiceAPI->MuteLocalAudioStream(mute);
+}
+
+void UAgoraVoiceManager::MuteAllRemoteAudioStreams(bool mute)
+{
+	VoiceAPI->MuteAllRemoteAudioStreams(mute);
+}
+
+void UAgoraVoiceManager::MuteRemoteAudioStream(int32 uid, bool mute)
+{
+	VoiceAPI->MuteRemoteAudioStream(uid,mute);
 }

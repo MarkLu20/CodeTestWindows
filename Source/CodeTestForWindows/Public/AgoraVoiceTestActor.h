@@ -23,11 +23,16 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 private:
+	TWeakObjectPtr<class UWebSocketTest> testWeb;
 	UAgoraVoiceManager *AvManager ;
 	TWeakObjectPtr<UAgoraVoiceManager> Mangager;
 	
 public:
 	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
+	/** Does the thing. */
+	UFUNCTION(BlueprintCallable, Category = Test)
+		void DoThing();
+
 	
 	bool SHA256(const FString &data,FSHA256Signature &Out);
 
